@@ -27,13 +27,14 @@ export const generateProduct = () => {
 	let stock = faker.number.int(100);
 	const status = () => !!stock;
 	return {
-		_id: faker.database.mongodbObjectId(),
+		id: faker.database.mongodbObjectId(),
 		title: faker.commerce.productName(),
 		description: faker.commerce.productDescription(),
 		category: faker.commerce.productDescription(),
-		code: `${faker.string.alpha({ count: 3 })}${faker.string.numeric({
-			min: 1000,
-			max: 9999,
+		code: `${faker.string
+			.alpha({ length: 3 })
+			.toUpperCase()}${faker.string.numeric({
+			length: 4,
 		})}`,
 		price: faker.commerce.price(),
 		thumbnails: [faker.image.url()],

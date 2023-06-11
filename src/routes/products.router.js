@@ -9,16 +9,18 @@ import {
 	updateProduct,
 	deleteProduct,
 	getRandomProducts,
+	getRandomProduct,
 } from "../controllers/products.controller.js";
 
 const productsRouter = Router();
 
 productsRouter.get("/", getProducts);
-productsRouter.get("/:pid", getProductById);
+// productsRouter.get("/:pid", getProductById);
 productsRouter.post("/", uploader.array("thumbnails", 10), addProduct);
 productsRouter.post("/many", addManyProducts);
 productsRouter.put("/:pid", updateProduct);
 productsRouter.delete("/:pid", deleteProduct);
-productsRouter.get("/random/products", getRandomProducts);
+productsRouter.get("/mockingproducts", getRandomProducts);
+productsRouter.get("/mockingproduct", getRandomProduct);
 
 export default productsRouter;

@@ -2,6 +2,10 @@ import { productsService } from "../services/products.service.js";
 import { cartsService } from "../services/carts.service.js";
 import { generateProduct } from "../utils.js";
 
+import CustomError from "../services/errors/CustomError.js";
+import EErrors from "../services/errors/enum.js";
+import { generateProductErrorInfo } from "../services/errors/info.js";
+
 // export async function getProducts(req, res) {
 // 	const { limit, page, category, status, sort } = req.query;
 // 	const products = productsService.getProducts(
@@ -141,10 +145,15 @@ export async function addProduct(req, res) {
 	const files = req.files.splice(0, 4);
 
 	if (!product) {
-		return res.status(400).send({
-			status: "Error",
-			error: "Error, the product could no be added",
+		CustomError.createError({
+			name: EErrors.MISSING_INFORMATION,
+			cause: "Error, the product could no be added, missing information",
+			code: 1,
 		});
+		// return res.status(400).send({
+		// 	status: "Error",
+		// 	error: "Error, the product could no be added",
+		// });
 	}
 
 	const result = await productsService.addProduct(product, files);
@@ -187,8 +196,13 @@ export async function deleteProduct(req, res) {
 
 export async function getRandomProducts(req, res) {
 	let products = [];
-	for (let i = 0; i < 10; i++) {
+	for (let i = 0; i < 100; i++) {
 		products.push(generateProduct());
 	}
 	res.json({ status: "Success", payload: products });
+}
+
+export async function getRandomProduct(req, res) {
+	const product = generateProduct();
+	res.json({ status: "Success", payload: product });
 }

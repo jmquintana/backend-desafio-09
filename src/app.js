@@ -63,10 +63,6 @@ database.connect();
 
 // Routes
 routerAPI(app);
-// app.use("/api/products", productsRouter);
-// app.use("/api/carts", cartsRouter);
-// app.use("/api/sessions", sessionsRouter);
-// app.use("/", viewsRouter);
 
 const httpServer = app.listen(PORT, (req, res) => {
 	console.log(`Server listening on port ${PORT}`);
