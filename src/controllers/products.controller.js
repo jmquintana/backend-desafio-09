@@ -1,17 +1,71 @@
 import { productsService } from "../services/products.service.js";
 import { cartsService } from "../services/carts.service.js";
+import { generateProduct } from "../utils.js";
+
+// export async function getProducts(req, res) {
+// 	const { limit, page, category, status, sort } = req.query;
+// 	const products = productsService.getProducts(
+// 		limit,
+// 		page,
+// 		category,
+// 		status,
+// 		sort
+// 	);
+
+// 	return res.send({ status: "Success", payload: products });
+// }
 
 export async function getProducts(req, res) {
+	let { user } = req.session;
 	const { limit, page, category, status, sort } = req.query;
-	const products = productsService.getProducts(
-		limit,
-		page,
-		category,
-		status,
-		sort
-	);
+	const filters = {};
+	const options = {
+		limit: parseInt(limit) || 100,
+		page: parseInt(page) || 1,
+		lean: true,
+	};
 
-	return res.send({ status: "Success", payload: products });
+	user.isAdmin = user?.role === "admin";
+
+	if (user.cart)
+		user.cartCount = await cartsService.getCartCount(user.cart._id);
+
+	if (category) {
+		filters.category = category;
+	}
+
+	if (status) {
+		filters.status = status;
+	}
+
+	if (sort) {
+		options.sort = sort;
+	}
+
+	const {
+		docs: products,
+		hasPrevPage,
+		hasNextPage,
+		prevPage,
+		nextPage,
+		totalDocs,
+		totalPages,
+	} = await productsService.getPaginatedProducts(filters, options);
+
+	return res.send({
+		status: "Success",
+		payload: {
+			products,
+			page,
+			hasPrevPage,
+			hasNextPage,
+			prevPage,
+			nextPage,
+			totalDocs,
+			totalPages,
+			user,
+		},
+	});
 }
 
 export async function renderPaginatedProducts(req, res) {
@@ -129,4 +183,12 @@ export async function deleteProduct(req, res) {
 	const result = await productsService.deleteProduct(productId);
 
 	return res.send({ status: "Success", payload: result });
+}
+
+export async function getRandomProducts(req, res) {
+	let products = [];
+	for (let i = 0; i < 10; i++) {
+		products.push(generateProduct());
+	}
+	res.json({ status: "Success", payload: products });
 }

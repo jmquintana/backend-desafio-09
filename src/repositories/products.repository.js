@@ -1,4 +1,5 @@
 import { productModel } from "../models/products.model.js";
+import { ObjectId } from "mongodb";
 
 class ProductsRepository {
 	constructor() {}
@@ -44,12 +45,17 @@ class ProductsRepository {
 	};
 
 	getProductById = async (productId) => {
-		try {
-			const result = await productModel.find({ _id: productId }).lean();
-			return result[0];
-		} catch (error) {
-			console.log(error);
-			return error;
+		if (productId.match(/^[0-9a-fA-F]{24}$/)) {
+			console.log("Yes, it's a valid ObjectId, proceed with `findById` call.");
+			try {
+				const result = await productModel.find({ _id: productId }).lean();
+				return result[0];
+			} catch (error) {
+				console.log(error);
+				return error;
+			}
+		} else {
+			console.log("No, invalid ObjectId, don't call `findById`.");
 		}
 	};
 

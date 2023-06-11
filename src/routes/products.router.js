@@ -8,20 +8,17 @@ import {
 	addManyProducts,
 	updateProduct,
 	deleteProduct,
+	getRandomProducts,
 } from "../controllers/products.controller.js";
 
-const router = Router();
+const productsRouter = Router();
 
-router.get("/", getProducts);
+productsRouter.get("/", getProducts);
+productsRouter.get("/:pid", getProductById);
+productsRouter.post("/", uploader.array("thumbnails", 10), addProduct);
+productsRouter.post("/many", addManyProducts);
+productsRouter.put("/:pid", updateProduct);
+productsRouter.delete("/:pid", deleteProduct);
+productsRouter.get("/random/products", getRandomProducts);
 
-router.get("/:pid", getProductById);
-
-router.post("/", uploader.array("thumbnails", 10), addProduct);
-
-router.post("/many", addManyProducts);
-
-router.put("/:pid", updateProduct);
-
-router.delete("/:pid", deleteProduct);
-
-export default router;
+export default productsRouter;

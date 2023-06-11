@@ -16,32 +16,24 @@ import {
 	renderCarts,
 } from "../controllers/carts.controller.js";
 
-const router = Router();
+const viewsRouter = Router();
 
-router.get("/", checkLogin, renderPaginatedProducts);
-
-router.get("/carts", checkAdmin, renderCarts);
-
-router.get("/product/:pid", renderProduct);
-
-router.put("/:cid", editProductQuantity);
-
-router.get("/cart/:cid", checkLogin, renderCartById);
-
-router.get("/register", checkRegistered, (req, res) => {
+viewsRouter.get("/", checkLogin, renderPaginatedProducts);
+viewsRouter.get("/carts", checkAdmin, renderCarts);
+viewsRouter.get("/product/:pid", renderProduct);
+viewsRouter.put("/:cid", editProductQuantity);
+viewsRouter.get("/cart/:cid", checkLogin, renderCartById);
+viewsRouter.get("/register", checkRegistered, (req, res) => {
 	res.render("register");
 });
-
-router.get("/login", checkSession, (req, res) => {
+viewsRouter.get("/login", checkSession, (req, res) => {
 	res.render("login");
 });
-
-router.get("/profile", checkLogin, (req, res) => {
+viewsRouter.get("/profile", checkLogin, (req, res) => {
 	res.render("profile", { user: req.session.user });
 });
-
-router.get("/restore", (req, res) => {
+viewsRouter.get("/restore", (req, res) => {
 	res.render("restore");
 });
 
-export default router;
+export default viewsRouter;

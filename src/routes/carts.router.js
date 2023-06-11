@@ -12,24 +12,20 @@ import {
 } from "../controllers/carts.controller.js";
 import { checkAdmin, checkUser, checkSession } from "../middlewares/auth.js";
 
-const router = Router();
+const cartsRouter = Router();
 
-router.post("/", addCart);
+cartsRouter.post("/", addCart);
+cartsRouter.get("/", checkAdmin, getCarts);
+cartsRouter.get("/:cid", checkSession, getCartById);
+cartsRouter.post("/:cid/product/:pid", checkUser, addProductToCart);
+cartsRouter.put("/:cid", checkUser, updateCart);
+cartsRouter.delete("/:cid/product/:pid", checkUser, deleteProductFromCart);
+cartsRouter.delete(
+	"/:cid/allProducts/:pid",
+	checkUser,
+	deleteAllProductFromCart
+);
+cartsRouter.delete("/:cid", deleteCart);
+cartsRouter.post("/:cid/purchase", checkUser, handlePurchase);
 
-router.get("/", checkAdmin, getCarts);
-
-router.get("/:cid", checkSession, getCartById);
-
-router.post("/:cid/product/:pid", checkUser, addProductToCart);
-
-router.put("/:cid", checkUser, updateCart);
-
-router.delete("/:cid/product/:pid", checkUser, deleteProductFromCart);
-
-router.delete("/:cid/allProducts/:pid", checkUser, deleteAllProductFromCart);
-
-router.delete("/:cid", deleteCart);
-
-router.post("/:cid/purchase", checkUser, handlePurchase);
-
-export default router;
+export default cartsRouter;

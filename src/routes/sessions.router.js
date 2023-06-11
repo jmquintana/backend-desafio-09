@@ -3,9 +3,9 @@ import { userModel } from "../models/users.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import passport from "passport";
 
-const router = Router();
+const sessionsRouter = Router();
 
-router.post(
+sessionsRouter.post(
 	"/register",
 	passport.authenticate("register", { failureRedirect: "/failRegister" }),
 	async (req, res) => {
@@ -13,7 +13,7 @@ router.post(
 	}
 );
 
-router.post(
+sessionsRouter.post(
 	"/login",
 	passport.authenticate("login", { failureRedirect: "/failLogin" }),
 	async (req, res) => {
@@ -33,16 +33,16 @@ router.post(
 	}
 );
 
-router.get("/failRegister", (req, res) => {
+sessionsRouter.get("/failRegister", (req, res) => {
 	console.log("Failed Register");
 	return res.send({ status: "Error", error: "Authentication error" });
 });
 
-router.get("/failLogin", (req, res) => {
+sessionsRouter.get("/failLogin", (req, res) => {
 	res.send({ status: "Error", error: "Failed login" });
 });
 
-router.put("/restore", async (req, res) => {
+sessionsRouter.put("/restore", async (req, res) => {
 	try {
 		const { email, password } = req.body;
 
@@ -67,7 +67,7 @@ router.put("/restore", async (req, res) => {
 });
 
 // logout route
-router.post("/logout", async (req, res) => {
+sessionsRouter.post("/logout", async (req, res) => {
 	try {
 		if (req.session) {
 			// delete session object
@@ -88,13 +88,13 @@ router.post("/logout", async (req, res) => {
 	}
 });
 
-router.get(
+sessionsRouter.get(
 	"/github",
 	passport.authenticate("githublogin", { scope: ["user:email"] }),
 	async (req, res) => {}
 );
 
-router.get(
+sessionsRouter.get(
 	"/githubcallback",
 	passport.authenticate("githublogin", { failureRedirect: "/login" }),
 	async (req, res) => {
@@ -103,11 +103,11 @@ router.get(
 	}
 );
 
-router.get("/current", async (req, res) => {
+sessionsRouter.get("/current", async (req, res) => {
 	if (req.session.user) {
 		return res.send({ status: "Success", payload: req.session.user });
 	}
 	return res.status(401).send({ status: "Error", error: "Unauthorized" });
 });
 
-export default router;
+export default sessionsRouter;
